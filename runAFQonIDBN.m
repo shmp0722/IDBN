@@ -24,7 +24,7 @@ IDBN_pre  = {'LHON5-HS-IDBN-20160516','LHON9-NH-IDBN-20160516','LHON10-RK-IDBN-2
 
 IDBN_post = {'LHON5-HS-post_IDBN-20161123','LHON9-NH-post_IDBN-20161121','LHON10-RK-post_IDBN-20161123','LHON11-SK-post_IDBN-20161123'};
     
-
+%subject = [64:67,75,76,82,83]
 
 % Make directory structure for each subject
 subs = [IDBN_pre,IDBN_post];
@@ -56,14 +56,28 @@ if newRun == 1;
     
     % Run AFQ on these subjects
     afq = AFQ_run(sub_dirs, sub_group, afq);
+    % Add callosal fibers
+    afq = AFQ_SegmentCallosum(afq);
+else
+    Git
+    cd IDBN
+    load afq_17-Jan-2017.mat
 end
 return
-%% Add callosal fibers
-afq = AFQ_SegmentCallosum(afq);
 
-%%
 
-% Add new fibers
+%% Prepare to add_newfibers
+for ii = 1:length(sub_dirs)
+    
+    OTdir = fullfile(sub_dirs{ii},'fibers/OT_MD32');
+    AFQdir = fullfile(sub_dirs{ii},'fibers');
+    OTs   = dir(fullfile(OTdir,'*OT*'));
+    
+    copyfile(fullfile(OTdir,OTs(1).name), fullfile(AFQdir,sprintf('%s.mat',OTs(1).name(1:8))));
+    copyfile(fullfile(OTdir,OTs(2).name), fullfile(AFQdir,sprintf('%s.mat',OTs(2).name(1:8))));
+end
+
+%% Add new fibers
 
 fgName = 'LOT_MD32';
 roi1Name = '85_Optic-Chiasm';
@@ -80,6 +94,31 @@ cleanFibers =0;
 computeVals =1;
 afq.params.clip2rois = 0;
 afq = AFQ_AddNewFiberGroup(afq, fgName, roi1Name, roi2Name, cleanFibers);
+
+%% Prepare to add_newfibers
+for ii = 1:length(sub_dirs)
+    
+    ORdir = fullfile(sub_dirs{ii},'fibers/conTrack/OR_100K');
+    AFQdir = fullfile(sub_dirs{ii},'fibers');
+    [p,f] = fileparts(sub_dirs{ii});
+    ROIdir = fullfile(p,'ROIs');
+    copyfile(fullfile(p,'ROIs/*'),fullfile(sub_dirs{ii},'ROIs'))
+    
+    LOR   = dir(fullfile(ORdir,'*Rh_NOT_MD4.pdb*'));
+    ROR   = dir(fullfile(ORdir,'*Lh_NOT_MD4.pdb*'));
+    
+    LOR   = fgRead(fullfile(ORdir, LOR.name));
+    LOR.name = 'LOR_MD4';
+    
+    ROR   = fgRead(fullfile(ORdir,ROR.name));
+    ROR.name = 'ROR_MD4';
+    
+    fgWrite(LOR,fullfile(AFQdir, [LOR.name,'.mat']),'mat')
+    fgWrite(ROR,fullfile(AFQdir, [ROR.name,'.mat']),'mat')
+    
+%     copyfile(fullfile(ORdir,ROR(1).name), fullfile(AFQdir,sprintf('%s.mat',LOR(1).name(1:8))));
+%     copyfile(fullfile(ORdir,LOR(1).name), fullfile(AFQdir,sprintf('%s.mat',ROR(1).name(1:8))));
+end
 
 %% Add optic radiation
 fgName = 'LOR_MD4';
@@ -98,75 +137,28 @@ computeVals =1;
 afq.params.clip2rois = 0;
 afq = AFQ_AddNewFiberGroup(afq, fgName, roi1Name, roi2Name, cleanFibers);
 
-fgName = 'LORC_MD4';
-roi1Name = 'Lt-LGN4';
-roi2Name = 'lh_Ecc0to3';
-cleanFibers =0;
-computeVals =1;
-afq.params.clip2rois = 0;
-afq = AFQ_AddNewFiberGroup(afq, fgName, roi1Name, roi2Name, cleanFibers);
+return
 
-fgName = 'RORC_MD4';
-roi1Name = 'Rt-LGN4';
-roi2Name = 'rh_Ecc0to3';
-cleanFibers =0;
-computeVals =1;
-afq.params.clip2rois = 0;
-afq = AFQ_AddNewFiberGroup(afq, fgName, roi1Name, roi2Name, cleanFibers);
-
-fgName = 'LORP_MD4';
-roi1Name = 'Lt-LGN4';
-roi2Name = 'lh_Ecc30to90';
-cleanFibers =0;
-computeVals =1;
-afq.params.clip2rois = 0;
-afq = AFQ_AddNewFiberGroup(afq, fgName, roi1Name, roi2Name, cleanFibers);
-
-fgName = 'RORP_MD4';
-roi1Name = 'Rt-LGN4';
-roi2Name = 'rh_Ecc30to90';
-cleanFibers =0;
-computeVals =1;
-afq.params.clip2rois = 0;
-afq = AFQ_AddNewFiberGroup(afq, fgName, roi1Name, roi2Name, cleanFibers);
-
-
-%%
-outname = fullfile(AFQ_get(afq,'outdir'),['afq_' date]);
-save(outname,'afq');
-
-
-
-%% Add qMRI maps to AFQ structure
+%% Add NODDI maps
 % create a cell array of paths to each subjects image.
-imgDir = dir(fullfile(qData,'LHON*'));
-imgDir2 = {imgDir(2).name,imgDir(3).name,imgDir(4).name,imgDir(5).name,...
-    imgDir(2).name,imgDir(3).name,imgDir(4).name,imgDir(5).name};
+imgDir ='/media/USB_HDD1/AMICO';
 
-% t1w_acpc.nii.gz: generated t1w map
-% T1_map_lin.nii.gz: quantitative T1 map
-% TV_map.nii.gz: MTV map
-% PD.nii.gz: quantitative PD map
-% VIP_map.nii.gz: VIP map
-% SIR_map.nii.gz: Surface Interction Rate map
+% subs
+for ii = 1:length(subs)
+    dwi = fullfile(imgDir, subs{ii}, 'NODDI_DWI.nii.gz');
+    dwi_img = fullfile(imgDir, subs{ii}, 'NODDI_DWI.hdr');
 
-for ii = 1:length(sub_dirs)
-      t1Path{ii} = fullfile(qData, imgDir2{ii}, 'T1_alligned_map_lin.nii.gz');
-      tvPath{ii} = fullfile(qData, imgDir2{ii}, 'TV_alligned_map.nii.gz');
-      pdPath{ii} = fullfile(qData, imgDir2{ii}, 'PD_alligned.nii.gz');
-      vipPath{ii} = fullfile(qData, imgDir2{ii}, 'VIP_alligned.nii.gz');
-      sirPath{ii} = fullfile(qData, imgDir2{ii}, 'SIR_alligned.nii.gz');
+    if exist(dwi_img,'file') && ~exist(dwi,'file');
+      nii = nii_tool('load', fullfile(imgDir, subs{ii}, 'NODDI_DWI.hdr'));
+      nii_tool('save',nii,fullfile(imgDir, subs{ii}, 'NODDI_DWI.nii.gz'));
+    end
+    
+    NODDI_Path{ii} = fullfile(imgDir, subs{ii}, 'NODDI_DWI.nii.gz');
 end
   
-afq = AFQ_set(afq, 'images', t1Path);
-afq = AFQ_set(afq, 'images', tvPath);
-afq = AFQ_set(afq, 'images', pdPath);
-afq = AFQ_set(afq, 'images', vipPath);
-afq = AFQ_set(afq, 'images', sirPath);
+afq = AFQ_set(afq, 'images', NODDI_Path);
 
-%% the maps will be computed and added to the AFQ structure:
-  afq = AFQ_run(sub_dirs, sub_group, afq);
-% The values of the tract profiles will be saved based on the name of the image (eg. t1_map). They can be accessed in the afq structure using the AFQ_get command:
-  vals = AFQ_get(afq, 'Left Arcuate' , 't1_map');
-
+%%
+afq = AFQ_set(afq,'overwritevals',1:8);
+afq = AFQ_run(sub_dirs, sub_group,afq);
 
