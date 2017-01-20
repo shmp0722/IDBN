@@ -17,7 +17,7 @@ if ~exist(fullfile(dMRI,List{ii},'dwi_1st/fibers/conTrack','OR_100K/*.pdb'),'fil
 end
 
 Subs  = List(~File);
-% Subs  = List([81,82,65,66]);  
+% Subs  = List([82,83]);  
 
 %% Optic Radiation
 % Set Params for contrack fiber generation

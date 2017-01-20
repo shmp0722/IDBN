@@ -120,7 +120,12 @@ for ii = 1:length(sub_dirs)
 %     copyfile(fullfile(ORdir,LOR(1).name), fullfile(AFQdir,sprintf('%s.mat',ROR(1).name(1:8))));
 end
 
+
 %% Add optic radiation
+
+% this cause an error. 
+afq.params.computenorms=0;
+
 fgName = 'LOR_MD4';
 roi1Name = 'Lt-LGN4';
 roi2Name = 'lh_V1_smooth3mm_Half';
