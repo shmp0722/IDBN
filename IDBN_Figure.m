@@ -1,16 +1,9 @@
 function IDBN_Figure
-% Plot patient data against controls
 %
 %
-% Example:
-%
-% load /biac4/wandell/data/WH/analysis/AFQ_WestonHavens_Full.mat
-% afq_controls = afq;
-% load /biac4/wandell/data/WH/kalanit/PS/AFQ_PS.mat
-% afq_patient = afq;
-% AFQ_PlotPatientMeans(afq_patient,afq_controls,'T1_map_lsq_2DTI',[],'age', [53 73])
-% AFQ_PlotPatientMeans(afq_patient,afq_controls,'fa',[],'age', [53 73])
-% AFQ_PlotPatientMeans(afq_patient,afq_controls,'md',[],'age', [53 73])
+% vistasoft
+% AFQ
+% 
 
 
 %% load afq
@@ -63,11 +56,6 @@ cmap = AFQ_colormap('bgr');
 % cmap =colormap;
 crange = [-4 4];
 
-% Make an output directory for this subject if there isn't one
-% if ~exist(outdir{s},'dir')
-%     mkdir(outdir{s});
-% end
-% fprintf('\nImages will be saved to %s\n',outdir);
 
 %% Loop over the different values
 % mrvNewGraphWin;
@@ -76,17 +64,12 @@ cVals = AFQ_get(afq,'control data');
 
 for v = 1:length(valname)
     % Open a new figure window for the mean plot
-    mrvNewGraphWin;
-
-%     subplot(3,3,v);
-    hold('on');    
+    mrvNewGraphWin; hold('on');    
     
     % Loop over each fiber group
     for ii = 1:nfg
         % Get the values for the patient and compute the mean
         vals_p = pVals(ii).(upper(valname{v}));
-        %         vals_p = afq.vals.(valname{v}){ii}(1,:);
-        %         pVals(ii).(upper(valname{v}));
         
         % Remove nodes that are not going to be analyzed and only
         % compute for subject #s
@@ -218,7 +201,7 @@ end
 return
 
 
-%%
+%% 
 pVals = AFQ_get(afq,'patient data');
 cVals = AFQ_get(afq,'control data');
 
