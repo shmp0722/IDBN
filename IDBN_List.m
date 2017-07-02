@@ -1,12 +1,11 @@
 function [IDBN_pre, IDBN_post, LHON] = IDBN_List
 %
+% Just gathering their names.
 %
 %
-%
-%
-
-
-%%
+% SO@ACH 2017.07.03
+%% Pre and Post IDBN
+% To do. Check qMRI exists. 
 LHON = {'LHON1-TK-20121130-DWI','LHON2-SO-20121130-DWI','LHON3-TO-20121130-DWI','LHON4-GK-20150628','LHON6-SS-20131206-DWI',...
     'LHON7-TT-2014-12-20','LHON8-AS-20151110'};
 
