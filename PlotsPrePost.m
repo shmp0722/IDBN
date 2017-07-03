@@ -25,8 +25,8 @@ for jj = 29:32% length(afq.fgnames)
         plot(afq.vals.fa{jj}(ii,:),'--b')%,'Color',c(ii,:))
         plot(afq.vals.fa{jj}(ii+4,:),'-r')%,'Color',c(ii,:))
         
-         [~,f]=fileparts(fileparts(afq.sub_dirs{ii}));
-         k = strfind(f,'-');
+        [~,f]=fileparts(fileparts(afq.sub_dirs{ii}));
+        k = strfind(f,'-');
         
         title(sprintf('%s; %s', f(1:k(1)-1), afq.fgnames{jj}))
         legend('Pre-Treat','Post-Treat')
@@ -51,13 +51,13 @@ for ii = 1:4 %subject loop
     end
     
     figure; hold on;
-%     plot(x1,y1,'ob')
-%     plot(x2,y2,'or')
-
+    %     plot(x1,y1,'ob')
+    %     plot(x2,y2,'or')
+    
     errorbar(x1,y1,z1,'ob')
     errorbar(x2,y2,z2,'or')
     
-    % add legend 
+    % add legend
     legend('Pre-Treat','Post-Treat')
     
     % ID is helpful
@@ -67,8 +67,8 @@ for ii = 1:4 %subject loop
     
     % set fg names
     set(gca,'XTickLabelRotation',90,'XTickLabelMode','manual','XTick',[1:32],...
-    'XTickLabel',afq.fgnames)
-
+        'XTickLabel',afq.fgnames)
+    
     xlabel tracts
     ylabel FA
 end
@@ -89,13 +89,13 @@ for ii = 1:4 %subject loop
     end
     
     figure; hold on;
-%     plot(x1,y1,'ob')
-%     plot(x2,y2,'or')
-
+    %     plot(x1,y1,'ob')
+    %     plot(x2,y2,'or')
+    
     errorbar(x1,y1,z1,'ob')
     errorbar(x2,y2,z2,'or')
     
-    % add legend 
+    % add legend
     legend('Pre-Treat','Post-Treat')
     
     % ID is helpful
@@ -105,8 +105,8 @@ for ii = 1:4 %subject loop
     
     % set fg names
     set(gca,'XTickLabelRotation',90,'XTickLabelMode','manual','XTick',[1:32],...
-    'XTickLabel',afq.fgnames)
-
+        'XTickLabel',afq.fgnames)
+    
     xlabel tracts
     ylabel MD
 end
@@ -127,13 +127,13 @@ for ii = 1:4 %subject loop
     end
     
     figure; hold on;
-%     plot(x1,y1,'ob')
-%     plot(x2,y2,'or')
-
+    %     plot(x1,y1,'ob')
+    %     plot(x2,y2,'or')
+    
     errorbar(x1,y1,z1,'ob')
     errorbar(x2,y2,z2,'or')
     
-    % add legend 
+    % add legend
     legend('Pre-Treat','Post-Treat')
     
     % ID is helpful
@@ -143,8 +143,8 @@ for ii = 1:4 %subject loop
     
     % set fg names
     set(gca,'XTickLabelRotation',90,'XTickLabelMode','manual','XTick',[1:32],...
-    'XTickLabel',afq.fgnames)
-
+        'XTickLabel',afq.fgnames)
+    
     xlabel tracts
     ylabel AD
 end
@@ -166,13 +166,13 @@ for ii = 1:4 %subject loop
     end
     
     figure; hold on;
-%     plot(x1,y1,'ob')
-%     plot(x2,y2,'or')
-
+    %     plot(x1,y1,'ob')
+    %     plot(x2,y2,'or')
+    
     errorbar(x1,y1,z1,'ob')
     errorbar(x2,y2,z2,'or')
     
-    % add legend 
+    % add legend
     legend('Pre-Treat','Post-Treat')
     
     % ID is helpful
@@ -182,9 +182,30 @@ for ii = 1:4 %subject loop
     
     % set fg names
     set(gca,'XTickLabelRotation',90,'XTickLabelMode','manual','XTick',[1:32],...
-    'XTickLabel',afq.fgnames)
-
+        'XTickLabel',afq.fgnames)
+    
     xlabel tracts
     ylabel RD
 end
+
+%% identification rate
+for ii= 1:32 % fg names loop
+    fg(ii) = sum(isnan( afq.vals.fa{ii}(:,50)));
+end
+
+NanFg = afq.fgnames(fg>0); %7,8,27
+
+perIdentidied = sum(fg)/(8*32)*100;
+
+%% Stats
+for id = 1:4;
+    for ii = [1:6,9:26,28:32] % fg names loop
+        pre  = afq.vals.fa{ii}(id,:);
+        post = afq.vals.fa{ii}(id+4,:);
+        
+        [h(id,ii),p(id,ii)] = ttest(pre(:),post(:));
+    end
+end
+
+sum(h,2)
 
