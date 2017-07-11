@@ -16,7 +16,7 @@ if ~exist(fullfile(dMRI,List{ii},'dwi_1st/fibers/conTrack','OT_5K'),'dir');
 end
 
 % Subs  = List([81,82,65,66]);  
-Subs  = List([67,68]);
+Subs  = List(File==0);
 % Subs = Subs(4:end-1);
 
 %% Optic Tract
@@ -24,7 +24,7 @@ Subs  = List([67,68]);
 ctrParams = ctrInitBatchParams;
 
 % set params
-ctrParams.projectName = 'OT_5K';
+ctrParams.projectName = 'OT_5K_thalamus';
 ctrParams.logName = 'myConTrackLog';
 ctrParams.baseDir = dMRI;
 ctrParams.dtDir = 'dwi_1st';
