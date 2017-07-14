@@ -29,7 +29,7 @@ fsDir = getenv('SUBJECTS_DIR');
 if isempty(fsDir)
     setenv('SUBJECTS_DIR', '/media/USB_HDD1/dMRI_data/freesurfer'); % be sure to edit this to your path
 end
-cd(fsDir)
+% cd(fsDir)
 %% cd to subject directory and generate a list of subject names
 
 [~,Subs] = SubJect; % change this to a base name that will pull all participants
@@ -80,11 +80,11 @@ for subnum=1:length(Subs) % for all participants
         
         %  RH labels from fsaverage spread to participants
         % for subnum=1:length(Subs) % for all participants
-        for labelnum=1:length(labelsrh) % for all labels
-            
-            eval(['! mri_label2label --srcsubject fsaverage --srclabel fsaverage/label/' labelsrh{labelnum}...
+        for labelnum=1:length(labelsrh) % for all labels            
+            cmd =['! mri_label2label --srcsubject fsaverage --srclabel fsaverage/label/' labelsrh{labelnum}...
                 ' --trgsubject ' Subs{subnum} ' --trglabel ' Subs{subnum} '/label/' labelsrh{labelnum} ...
-                ' --regmethod surface --hemi rh'])
+                ' --regmethod surface --hemi rh'];
+            eval(cmd)
         end
     catch
     end
@@ -93,7 +93,7 @@ end
 
 %% Create output folder to store labels
 
-statsoutfolder = '/media/USB_HDD1/dMRI_data/freesurfer/Stats_Folder'; % change this to your name of choice
+statsoutfolder = '/media/USB_HDD1/dMRI_data/Stats_Folder'; % change this to your name of choice
 if ~exist(statsoutfolder,'dir'); mkdir(statsoutfolder);end
 
 %% Create stats files from the new labels
@@ -103,17 +103,16 @@ if ~exist(statsoutfolder,'dir'); mkdir(statsoutfolder);end
 %  LH stats files created from each label
 for subnum=1:length(Subs) % for all participants
     try
-        for labelnum=1:length(labelslh) % for all labels
-            
-            eval(['! mris_anatomical_stats -l ' labelslh{labelnum} ' -f ' statsoutfolder '/' Subs{subnum} '.' labelslh{labelnum} '.out ' Subs{subnum} ' lh'])
-            
-        end
-        
-        
+%         for labelnum=1:length(labelslh) % for all labels
+%             
+%             eval(['! mris_anatomical_stats -l ' labelslh{labelnum} ' -f ' statsoutfolder '/' Subs{subnum} '.' labelslh{labelnum} '.out ' Subs{subnum} ' lh'])
+%             
+%         end
+                
         %  RH stats files created from each label
         
-        % for labelnum=1:length(labelsrh) % for all labels
-        for subnum=1:length(Subs)% for all participants
+        for labelnum=1:length(labelsrh) % for all labels
+%         for subnum=1:length(Subs)% for all participants
             
             eval(['! mris_anatomical_stats -l ' labelsrh{labelnum} ' -f ' statsoutfolder '/' Subs{subnum} '.' labelsrh{labelnum} '.out ' Subs{subnum} ' rh'])
             
