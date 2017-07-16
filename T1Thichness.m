@@ -44,7 +44,7 @@ Ctl   = [34:43, 49, 60];
 Glc   = [44, 46];
 JMD   = [61:75];
 LHON  = [76:95,97];
-RP    = [98:101,103,111];
+RP    = [98:101,103:111];
 
 %% Surf Area
 figure;hold on;
@@ -106,13 +106,13 @@ SF = nanmean(lh.ThickAvg([Ctl,AMD_C],:));
 SF_std = nanstd(lh.ThickAvg([Ctl,AMD_C],:));
 errorbar(1:9, SF, SF_std,'k')
 
-SF = nanmean(lh.ThickAvg([Ctl],:));
-SF_std = nanstd(lh.ThickAvg([Ctl],:));
-errorbar(1:9, SF, SF_std)
-
-SF = nanmean(lh.ThickAvg(AMD_C,:));
-SF_std = nanstd(lh.ThickAvg(AMD_C,:));
-errorbar(1:9, SF, SF_std)
+% SF = nanmean(lh.ThickAvg([Ctl],:));
+% SF_std = nanstd(lh.ThickAvg([Ctl],:));
+% errorbar(1:9, SF, SF_std)
+% 
+% SF = nanmean(lh.ThickAvg(AMD_C,:));
+% SF_std = nanstd(lh.ThickAvg(AMD_C,:));
+% errorbar(1:9, SF, SF_std)
 
 % legend({'AMD','LHON','RP','Glc','Ctl','AMD_C'})
 legend({'AMD','LHON','RP','Ctl'})

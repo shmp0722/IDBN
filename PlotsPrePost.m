@@ -65,11 +65,11 @@ for ii = 1:4 %subject loop
     
     
     for kk = x;
-       if h(kk)==1;
-           plot(kk, 0.21 ,'*k')
-       end
+        if h(kk)==1;
+            plot(kk, 0.21 ,'*k')
+        end
     end
-               
+    
     % add legend
     legend('Pre-Treat','Post-Treat','Location','northwest')
     
@@ -86,7 +86,7 @@ for ii = 1:4 %subject loop
     ylabel FA
 end
 
-%% FA merge L and R 
+%% FA merge L and R
 % x axis
 for ii = 1:4 %subject loop
     x = 1:2;
@@ -110,14 +110,14 @@ for ii = 1:4 %subject loop
     errorbar(x2,[y2(29),y2(31)],[z2(29),z2(31)],'or')
     
     
-       if h(29)==1;
-           plot(1, 0.21 ,'*k')
-       end
-       if h(31)==1;
-           plot(2,0.21,'*k')
-       end
+    if h(29)==1;
+        plot(1, 0.21 ,'*k')
+    end
+    if h(31)==1;
+        plot(2,0.21,'*k')
+    end
     
-               
+    
     % add legend
     legend('Pre-Treat','Post-Treat','Location','northwest')
     
@@ -159,9 +159,9 @@ for ii = 1:4 %subject loop
     
     % stats '*'
     for kk = x;
-       if h(kk)==1;
-           plot(kk, 0.31 ,'*k')
-       end
+        if h(kk)==1;
+            plot(kk, 0.31 ,'*k')
+        end
     end
     
     % add legend
@@ -190,7 +190,7 @@ for ii = 1:4 %subject loop
     % y values
     for kk = 1:32
         y1(kk) = nanmean(afq.vals.ad{kk}(ii,:),2);
-        z1(kk) = nanstd(afq.vals.ad{kk}(ii,:)');
+        z1(kk) = std(afq.vals.ad{kk}(ii,:),'omitnan');
         y2(kk) = nanmean(afq.vals.ad{kk}(ii+4,:),2);
         z2(kk) = nanstd(afq.vals.ad{kk}(ii+4,:));
         h(kk)  = ttest(afq.vals.ad{kk}(ii,:), afq.vals.ad{kk}(ii+4,:));
@@ -205,9 +205,9 @@ for ii = 1:4 %subject loop
     
     % stats '*'
     for kk = x;
-       if h(kk)==1;
-           plot(kk, 0.71 ,'*k')
-       end
+        if h(kk)==1;
+            plot(kk, 0.71 ,'*k')
+        end
     end
     
     % add legend
@@ -252,9 +252,9 @@ for ii = 1:4 %subject loop
     
     % stats '*'
     for kk = x;
-       if h(kk)==1;
-           plot(kk, 0.21 ,'*k')
-       end
+        if h(kk)==1;
+            plot(kk, 0.21 ,'*k')
+        end
     end
     
     % add legend
@@ -292,26 +292,26 @@ for id = 1:4;
     end
 end
 
-% number of fibers have different values in pre with post  
+% number of fibers have different values in pre with post
 sum(h,2)
 
 %%
 for ii = 1:4
-Pre_dt = dtiLoadDt6( afq.files.dt6{ii});
-Pre_dt.files.alignedDwRaw
-
-Post_dt = dtiLoadDt6( afq.files.dt6{ii+4});
-
-%subject name
-[~,f]=fileparts(fileparts(afq.sub_dirs{ii}));
-k = strfind(f,'-');
-subname =  f(1:k(1)-1);
-
-% cmd = '!osmosis-dti-rrmse.py dwi1st_aligned_trilin.nii.gz dwi1st_aligned_trilin.bvecs dwi1st_aligned_trilin.bvals dwi2nd_aligned_trilin.nii.gz dwi2nd_aligned_trilin.bvecs dwi2nd_aligned_trilin.bvals dti_rrmse_wmMask.nii.gz --mask_file wmMask.nii.gz';
-cmd = sprintf('!osmosis-dti-rrmse.py %s %s %s %s %s %s %s_dti_rrmse_wmMask.nii.gz --mask_file %s'...
-    ,Pre_dt.files.alignedDwRaw, Pre_dt.files.alignedDwBvecs, Pre_dt.files.alignedDwBvals,...
-    Post_dt.files.alignedDwRaw,Post_dt.files.alignedDwBvecs, Post_dt.files.alignedDwBvals,...
-    subname,Post_dt.files.brainMask);
-
-eval(cmd)
-%%
+    Pre_dt = dtiLoadDt6( afq.files.dt6{ii});
+    Pre_dt.files.alignedDwRaw
+    
+    Post_dt = dtiLoadDt6( afq.files.dt6{ii+4});
+    
+    %subject name
+    [~,f]=fileparts(fileparts(afq.sub_dirs{ii}));
+    k = strfind(f,'-');
+    subname =  f(1:k(1)-1);
+    
+    % cmd = '!osmosis-dti-rrmse.py dwi1st_aligned_trilin.nii.gz dwi1st_aligned_trilin.bvecs dwi1st_aligned_trilin.bvals dwi2nd_aligned_trilin.nii.gz dwi2nd_aligned_trilin.bvecs dwi2nd_aligned_trilin.bvals dti_rrmse_wmMask.nii.gz --mask_file wmMask.nii.gz';
+    cmd = sprintf('!osmosis-dti-rrmse.py %s %s %s %s %s %s %s_dti_rrmse_wmMask.nii.gz --mask_file %s'...
+        ,Pre_dt.files.alignedDwRaw, Pre_dt.files.alignedDwBvecs, Pre_dt.files.alignedDwBvals,...
+        Post_dt.files.alignedDwRaw,Post_dt.files.alignedDwBvecs, Post_dt.files.alignedDwBvals,...
+        subname,Post_dt.files.brainMask);
+    
+    eval(cmd)
+    %%
