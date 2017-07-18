@@ -50,10 +50,14 @@ for ii = 1:4 %subject loop
     % y values
     for kk = x
         y1(kk) = nanmean(afq.vals.fa{kk}(ii,:),2);
-        z1(kk) = nanstd(afq.vals.fa{kk}(ii,:)');
+        z1(kk) = std(afq.vals.fa{kk}(ii,:),'omitnan');
         y2(kk) = nanmean(afq.vals.fa{kk}(ii+4,:),2);
         z2(kk) = nanstd(afq.vals.fa{kk}(ii+4,:));
-        h(kk)  = ttest(afq.vals.fa{kk}(ii,:), afq.vals.fa{kk}(ii+4,:));
+       try
+           h(kk)  = ttest(afq.vals.fa{kk}(ii,:), afq.vals.fa{kk}(ii+4,:));
+       catch
+           h(kk) = 0;
+       end
     end
     
     figure; hold on;
@@ -147,7 +151,11 @@ for ii = 1:4 %subject loop
         z1(kk) = nanstd(afq.vals.md{kk}(ii,:));
         y2(kk) = nanmean(afq.vals.md{kk}(ii+4,:),2);
         z2(kk) = nanstd(afq.vals.md{kk}(ii+4,:));
-        h(kk)  = ttest(afq.vals.md{kk}(ii,:), afq.vals.md{kk}(ii+4,:));
+        try
+            h(kk)  = ttest(afq.vals.md{kk}(ii,:), afq.vals.md{kk}(ii+4,:));
+        catch
+            h(kk)  = 0;
+        end
     end
     
     figure; hold on;
