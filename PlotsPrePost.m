@@ -75,6 +75,68 @@ for jj = 31:32% length(afq.fgnames)
 end
 clear ii jj k f;
 
+
+%%%%%%%%%%%%%%%%%%%%%
+%% MERGED
+%% OT
+% c = lines(4);
+
+% for jj = 29:30% length(afq.fgnames)
+    jj =29;
+    for ii = 1:4
+        figure; hold on;
+        
+        plot( (afq.vals.fa{jj}(ii,:)+afq.vals.fa{jj+1}(ii,:))./2,'--b', 'LineWidth',2)%,'Color',c(ii,:))
+        plot( (afq.vals.fa{jj}(ii+4,:)+afq.vals.fa{jj+1}(ii+4,:))./2,'-r', 'LineWidth',2)%,'Color',c(ii,:))
+        
+        [~,f]=fileparts(fileparts(afq.sub_dirs{ii}));
+        k = strfind(f,'-');
+%         title(sprintf('%s; %s', f(1:k(1)-1), afq.fgnames{jj}(1:3)))
+        
+        title(afq.fgnames{jj}(1:3))
+        legend('Pre-Treat','Post-Treat','Location','southeast')
+        ylabel FA
+        
+        set(gca,'FontSize',20, 'YLim',[0 0.6], 'YTick', [0 0.6], 'XTick',[0 100],...
+            'XTickLabel', {'OC', 'LGN'})
+        
+        saveas(gca, fullfile(pwd,'ForSinkeiGanka',sprintf('%s_%s_Merged.png',f(1:k(1)-1),afq.fgnames{jj}(1:3) )))
+        
+    end
+% end
+
+%% OR
+% c = lines(4);
+
+ jj = 31;% length(afq.fgnames)
+    
+    for ii = 1:4
+        figure; hold on;
+        
+        plot( (afq.vals.fa{jj}(ii,:)+afq.vals.fa{jj+1}(ii,:))./2,'--b', 'LineWidth',2)%,'Color',c(ii,:))
+        plot( (afq.vals.fa{jj}(ii+4,:)+afq.vals.fa{jj}(ii+4,:))./2,'-r', 'LineWidth',2)%,'Color',c(ii,:))
+              
+        [~,f]=fileparts(fileparts(afq.sub_dirs{ii}));
+        k = strfind(f,'-');
+        title(afq.fgnames{jj}(1:3))
+
+%         title(sprintf('%s; %s', f(1:k(1)-1), afq.fgnames{jj}))
+        legend('Pre-Treat','Post-Treat','Location','southwest')
+        ylabel FA
+        
+        set(gca,'FontSize',20, 'YLim',[0.1 0.7], 'YTick', [.1 0.7], 'XTick',[0 100],...
+            'XTickLabel', {'LGN', 'V1'})
+        
+        saveas(gca, fullfile(pwd,'ForSinkeiGanka',sprintf('%s_%s_Merged.png',f(1:k(1)-1),afq.fgnames{jj}(1:3) )))
+        
+    end
+    
+
+clear ii jj k f;
+
+
+
+
 %% FA ; basic AFQ tracts
 % x axis
 for ii = 1:4 %subject loop
